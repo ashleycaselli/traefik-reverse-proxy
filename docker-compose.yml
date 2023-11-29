@@ -1,0 +1,24 @@
+version: "3.4"
+services:
+  traefik:
+    image: traefik:2.7
+    container_name: traefik-reverse-proxy
+    restart: 'unless-stopped'
+    ports:
+      - "80:80"
+      - "443:443"
+      # (Optional) Expose Dashboard
+      - "8080:8080" # Don't do this in production
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config:/etc/traefik
+      - traefik-ssl-certs:/ssl-certs
+    networks:
+      - web
+volumes:
+  traefik-ssl-certs:
+    driver: local
+
+networks:
+  web:
+    name: web
